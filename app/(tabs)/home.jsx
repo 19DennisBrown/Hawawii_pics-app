@@ -1,6 +1,6 @@
 
 
-import { View, Text, SafeAreaView, ScrollView, FlatList, ActivityIndicator } from 'react-native'
+import { View, Text, SafeAreaView, ScrollView,StyleSheet, FlatList, Image, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
 
 
@@ -34,39 +34,64 @@ const Home =()=>{
   useEffect(()=>{
     fetchApi()
   }, [])
+
+  const Product=({price, imageLink})=>{
+    return(
+
+      <View style={styles.itemContainer} className="  bg-blue-300" >
+        <Image source={{uri:imageLink}} style={styles.image} className="w-90" />
+        <Text style={styles.title}>{price}</Text>
+      </View>
+
+    )
+  }
   return(
     <SafeAreaView>
-      <ScrollView
-        contentContainerStyle={{
-          height:'100%',
-          backgroundColor: 'pink'
-        }}
-      >
+      
         <View
-        className="grid text-center h-full items-center justify-center"
+        className="grid pt-20 text-center w-full h-full items-center justify-center w-90 bg-blue-300"
         >
-          <Text className="text-3xl" > {"homepage"} </Text>
-
-        </View>
-
-        { loading ? (<ActivityIndicator color={'red'} size={'large'}/>) :
-          error ? <View>{error}</View> :
-         ( <FlatList
+          <Text className="text-3xl pb-10" > {"homepage"} </Text>
+          { loading ? (<ActivityIndicator color={'green'} size={'large'}/>) :
+          error ? <View> <Text>{error}</Text></View> :
+          ( <FlatList
             showsVerticalScrollIndicator={false}
               data = {products}
-              renderItem={( {item} )=><View>
-                <Image
-                  source={{ uri:item.image }}
-                />
-                <Text> "Kshs." {item.price }</Text>
-              </View>}
+              keyExtractor={(item) => item.id}
+              renderItem={( {item} )=><Product price={item.price} imageLink={item.image} />}
           />)
         }
-     </ScrollView>
+        </View>
+
+       
+          
    </SafeAreaView>
   )
 }
 
+const styles = StyleSheet.create({
+  listContainer: {
+    padding: 10,
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 15,
+    backgroundColor: '#f9f9f9',
+    padding: 10,
+    borderRadius: 8,
+  },
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 25,
+    marginRight: 15,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  }
+})
 
 
 export default Home;
